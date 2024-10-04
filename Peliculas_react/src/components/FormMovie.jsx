@@ -13,14 +13,35 @@ export default function FormMovie() {
     const [trailer, setTrailer] = useState("");
     const [poster, setPoster] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [actors, setActors] = useState([]);
+    const [actorsId, setActorsId] = useState([]);
+    const [directorId, setDirectorId] = useState([]);
+    const [genreId, setGenreId] = useState([]);
+    const [screenwritterId, setScreenwritterId] = useState([]);
     const [dropdownActorNumber, setDropdownActorNumber] = useState(1);
+    const [dropdownDirectorNumber, setDropdownDirectorNumber] = useState(1);
+    const [dropdownScreenwritterNumber, setDropdownScreenwritterNumber] = useState(1);
+    const [dropdownGenreNumber, setDropdownGenreNumber] = useState(1);
 
     const handleActorChange = (index, value) => {
-        const newActors = [...actors];
+        const newActors = [...actorsId];
         newActors[index] = value; // Actualiza el actor en la posición correspondiente
-        setActors(newActors);
+        setActorsId(newActors);
     };
+    const handleDirectorChange = (index, value) => {
+        const newDirector = [...directorId];
+        newDirector[index] = value;
+        setDirectorId(newDirector);
+    };
+    const handleScreenwritterChange = (index, value) => {
+        const newScreenwritter = [...screenwritterId];
+        newScreenwritter[index] = value;
+        setScreenwritterId(newScreenwritter);
+    }
+    const handleGenreChange = (index, value) => {
+        const newGenre = [...genreId];
+        newGenre[index] = value;
+        setGenreId(newGenre);
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +54,10 @@ export default function FormMovie() {
             banner,
             trailer,
             poster,
-            actors,
+            directorId,
+            actorsId,
+            screenwritterId,
+            genreId
         };
 
         const options = {
@@ -45,18 +69,25 @@ export default function FormMovie() {
             body: JSON.stringify(credentials)
         };
 
-        fetch(`${API_URL}movie`, options)
-            .then((res) => res.json())
-            .then(res => {
-                if (res.error) {
-                    setErrorMessage("Error creating movie");
-                } else {
-                    setErrorMessage("Movie created successfully");
-                    console.log(res);
+        fetch(`${API_URL}/movie`, options)
+            .then((res) => {
+                if (!res.ok) {
+                    // Manejar el código de estado 400 (Bad Request)
+                    if (res.status === 400) {
+                        return res.json().then(errorData => {
+                            throw new Error(errorData.message || "Error creating movie");
+                        });
+                    }
+                    throw new Error("Error creating movie");
                 }
+                return res.json();
+            })
+            .then(res => {
+                setErrorMessage("Movie created successfully");
+                console.log(res);
             })
             .catch((err) => {
-                setErrorMessage('Error creating movie');
+                setErrorMessage(err.message); // Muestra el mensaje de error recibido
                 console.log(err);
             });
     };
@@ -123,14 +154,52 @@ export default function FormMovie() {
                 <input
                     type="number"
                     min="1"
+                    className='form-control'
                     value={dropdownActorNumber}
                     onChange={(e) => setDropdownActorNumber(e.target.value)}
                 />
                 {
                     Array.from({ length: dropdownActorNumber }, (_, i) => (
-                        <DropdownSelect key={i} index={i} endpoint="actor" onChange={handleActorChange} />
+                        <DropdownSelect key={i} index={i} name="Actor" endpoint="actor" onChange={handleActorChange} />
                     ))
                 }
+                <input
+                    type="number"
+                    min="1"
+                    className='form-control'
+                    value={dropdownDirectorNumber}
+                    onChange={(e) => setDropdownDirectorNumber(e.target.value)}
+                />
+                {
+                    Array.from({ length: dropdownDirectorNumber }, (_, i) => (
+                        <DropdownSelect key={i} index={i} name="Director" endpoint="director" onChange={handleDirectorChange} />
+                    ))
+                }
+                <input
+                    type="number"
+                    min="1"
+                    className='form-control'
+                    value={dropdownScreenwritterNumber}
+                    onChange={(e) => setDropdownScreenwritterNumber(e.target.value)}
+                />
+                {
+                    Array.from({ length: dropdownScreenwritterNumber }, (_, i) => (
+                        <DropdownSelect key={i} index={i} name="Screenwritter" endpoint="screenwritter" onChange={handleScreenwritterChange} />
+                    ))
+                }
+                <input
+                    type="number"
+                    min="1"
+                    className='form-control'
+                    value={dropdownGenreNumber}
+                    onChange={(e) => setDropdownGenreNumber(e.target.value)}
+                />
+                {
+                    Array.from({ length: dropdownGenreNumber }, (_, i) => (
+                        <DropdownSelect key={i} index={i} name="Genre" endpoint="genre" onChange={handleGenreChange} />
+                    ))
+                }
+
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
