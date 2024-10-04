@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import InputLabel from '../components/InputLabel'
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Cookie from 'js-cookie'
 
 const API_URL = import.meta.env.VITE_API_URL;
 export default function Login() {
+    const {login} = useAuth()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
-    // const navigate = useNavigate()
+     const navigate = useNavigate()
 
-    const login = (e) => {
+    const loginFunction = (e) => {
         e.preventDefault()
         const credentials = {
             username,
@@ -28,8 +32,11 @@ export default function Login() {
                 if (res.error) {
                     setErrorMessage("Usuario o contraseña equivocados")
                 } else {
+                    console.log(res)
                     Cookie.set('token', res, { expires: 180000 })
-                    // navigate('')
+                    console.log(username)
+                    login(res)
+                    //navigate('/')
                 }
             })
             .catch((err) => { setErrorMessage('Fallo al iniciar sesión') })
@@ -37,7 +44,7 @@ export default function Login() {
     return (
         <>
             <section className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
-                <form className='' onSubmit={login}>
+                <form className='' onSubmit={loginFunction}>
                     <InputLabel
                         labelFor="username"
                         label="Usuario"
