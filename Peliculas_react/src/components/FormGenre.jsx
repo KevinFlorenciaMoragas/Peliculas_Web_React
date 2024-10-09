@@ -3,12 +3,12 @@ import InputLabel from './InputLabel'
 
 const API_URL = import.meta.env.VITE_API_URL;
 export default function FormGenre() {
-    const [genre, setGenre] = useState("");
+    const [name, setName] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const handleSubmit = (e) => {
         e.preventDefault();
         const credentials = {
-            genre
+            name
         };
         const options = {
             method: 'POST',
@@ -43,8 +43,8 @@ export default function FormGenre() {
                     label="Genre Name"
                     inputType="text"
                     inputId="genre"
-                    value={genre}
-                    onChange={(e) => setGenre(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                 />
 
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}

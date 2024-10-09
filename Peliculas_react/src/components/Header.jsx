@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext';
+import SearchInput from './SearchInput';
 export default function Header() {
   const {user, logout, role} = useAuth()
   const handleSearchSubmit = (event) => {
@@ -52,10 +53,7 @@ export default function Header() {
              </>
             )}
           </ul>
-          <form className='d-flex' onSubmit={handleSearchSubmit}>
-            <input className='form-control me-2' type='search' placeholder='Buscar' aria-label='Buscar' />
-            <button className='btn btn-outline-secondary' type='submit'>Buscar</button>
-          </form>
+          <SearchInput></SearchInput>
           <div className='ps-lg-5'>
             {user ? (
               <>

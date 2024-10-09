@@ -9,6 +9,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import AdminPanel from './pages/AdminPanel.jsx'
 import Header from './components/Header.jsx'
+import MovieDetail from './pages/MovieDetail.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,6 +22,8 @@ createRoot(document.getElementById('root')).render(
             <Route path='/login' element={<Login></Login>}></Route>
             <Route path='/register' element={<Register></Register>}></Route>
             <Route path='/admin' element={<AdminPanel></AdminPanel>}></Route>
+            <Route path='/movie/:id' element={<MovieDetail></MovieDetail>}> </Route>
+            
           </Route>
         </Routes>
       </AuthProvider>

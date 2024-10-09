@@ -11,6 +11,7 @@ export default function FormMovie() {
     const [score, setScore] = useState("");
     const [banner, setBanner] = useState("");
     const [trailer, setTrailer] = useState("");
+    const [synopsis, setSynopsis] = useState("");
     const [poster, setPoster] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [actorsId, setActorsId] = useState([]);
@@ -54,6 +55,7 @@ export default function FormMovie() {
             banner,
             trailer,
             poster,
+            synopsis,
             directorId,
             actorsId,
             screenwritterId,
@@ -102,6 +104,14 @@ export default function FormMovie() {
                     inputId="movieName"
                     value={movieName}
                     onChange={(e) => setMovieName(e.target.value)}
+                />
+                <InputLabel
+                labelFor="synopsis"
+                label="Synopsis"
+                inputType="text"
+                inputId="synopsis"
+                value={synopsis}
+                onChange={(e) => setSynopsis(e.target.value)}
                 />
                 <InputLabel
                     labelFor="duration"
