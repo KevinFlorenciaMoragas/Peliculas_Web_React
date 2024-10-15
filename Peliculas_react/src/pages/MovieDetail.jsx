@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Tabs from 'react-bootstrap/esm/Tabs';
 import CardRelationMovie from '../components/CardRelationMovie';
+import LikeButton from '../components/LikeButton';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +12,7 @@ export default function MovieDetail() {
   const [moviesRelation, setMoviesRelation] = useState({})
   const [errorMessage, setErrorMessage] = useState("");
   const { id } = useParams();
-
+  const like = "like";
   useEffect(() => {
     const options = {
       method: 'GET',
@@ -38,7 +39,7 @@ export default function MovieDetail() {
   }, [id]);
 
   const imgStyle = {
-    width: '20%',
+    width: '100%',
     height: 'auto'
   };
 
@@ -50,6 +51,7 @@ export default function MovieDetail() {
     <Tabs>
       <Tab eventKey="Info Pelicula" title="Película">
         <section className='row d-flex justify-content-center'>
+          <LikeButton userId={1} movieId={movie.id} propertyName={like} />
           <h2 className='pt-2'>{movie.movieName}</h2>
           <span className='pt-2'>Año {movie.releaseDate} | Duración {movie.duration} min</span>
           <img className='img-fluid d-lg-block' src={movie.banner} alt={`${movie.movieName} banner`} />
