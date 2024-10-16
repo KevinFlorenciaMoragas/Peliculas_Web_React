@@ -4,15 +4,22 @@ import { useParams } from 'react-router-dom';
 import Tabs from 'react-bootstrap/esm/Tabs';
 import CardRelationMovie from '../components/CardRelationMovie';
 import LikeButton from '../components/LikeButton';
-
+import fullLikeButton from '../assets/svg/like-full.svg';
+import noFullLikeButton from '../assets/svg/like-nofull.svg';
+import listCheckButton from '../assets/svg/list-check.svg';
+import noListCheckButton from '../assets/svg/list-cross.svg';
+import movieFullButton from '../assets/svg/movie-full.svg';
+import movieNoFullButton from '../assets/svg/movie-nofull.svg';
+import { useAuth } from '../context/AuthContext';
+import YoutubeVideos from '../components/YoutubeVideos';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MovieDetail() {
   const [movie, setMovie] = useState(null);
-  const [moviesRelation, setMoviesRelation] = useState({})
   const [errorMessage, setErrorMessage] = useState("");
   const { id } = useParams();
-  const like = "like";
+  const { userId } = useAuth();
+
   useEffect(() => {
     const options = {
       method: 'GET',
@@ -35,7 +42,6 @@ export default function MovieDetail() {
       .catch(() => {
         setErrorMessage('Fallo al cargar la película');
       });
-
   }, [id]);
 
   const imgStyle = {
@@ -51,7 +57,6 @@ export default function MovieDetail() {
     <Tabs>
       <Tab eventKey="Info Pelicula" title="Película">
         <section className='row d-flex justify-content-center'>
-          <LikeButton userId={1} movieId={movie.id} propertyName={like} />
           <h2 className='pt-2'>{movie.movieName}</h2>
           <span className='pt-2'>Año {movie.releaseDate} | Duración {movie.duration} min</span>
           <img className='img-fluid d-lg-block' src={movie.banner} alt={`${movie.movieName} banner`} />
@@ -64,16 +69,21 @@ export default function MovieDetail() {
                 ))}
               </div>
               <p>{movie.synopsis}</p>
+              <section className='col-12 col-md-5 col-lg-4 d-flex flex-row'>
+                <LikeButton userId={userId} movieId={movie.id} propertyName={"like"} fullButton={fullLikeButton} noFullButton={noFullLikeButton} />
+                <LikeButton userId={userId} movieId={movie.id} propertyName={"watched"} fullButton={movieFullButton} noFullButton={movieNoFullButton} />
+                <LikeButton userId={userId} movieId={movie.id} propertyName={"toSee"} fullButton={listCheckButton} noFullButton={noListCheckButton} />
+              </section>
             </div>
           </article>
           <section className='col-12 col-md-5 col-lg-4 p-3'>
             <h3>Director</h3>
             {movie.directors && movie.directors.length > 0 ? (
-              movie.directors.map((directors, index) => (
-                <span key={index}> {directors.name} {directors.lastName} </span>
+              movie.directors.map((director, index) => (
+                <span key={index}> {director.name} {director.lastName} </span>
               ))
             ) : (
-              <span>Sin actores disponibles</span>
+              <span>Sin directores disponibles</span>
             )}
             <h3>Actores</h3>
             <div>
@@ -88,22 +98,29 @@ export default function MovieDetail() {
             <h3>Escritores</h3>
             <div>
               {movie.screenwritters && movie.screenwritters.length > 0 ? (
-                movie.screenwritters.map((screenwritters, index) => (
-                  <span key={index}> {screenwritters.name} {screenwritters.lastName} </span>
+                movie.screenwritters.map((screenwriter, index) => (
+                  <span key={index}> {screenwriter.name} {screenwriter.lastName} </span>
                 ))
               ) : (
                 <span>Sin escritores disponibles</span>
               )}
             </div>
           </section>
-          <section className='col-12 col-md-5 col-lg-4 p-3'>
+          <section className='col-12 col-md-5 col-lg-4'>
             <h3>Trailer</h3>
-            <iframe width="100%" height="auto" src={movie.trailer} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+             <YoutubeVideos trailer={movie.trailer}></YoutubeVideos> 
           </section>
           <section className=''>
-            <CardRelationMovie></CardRelationMovie>
+            {
+              movie.genres && movie.genres.map((genre) => (
+                <CardRelationMovie key={genre.id} genreId={genre.id} movieId={id} />
+              ))
+            }
           </section>
         </section>
+      </Tab>
+      <Tab eventKey="Comments" title="Comentario">
+
       </Tab>
     </Tabs>
   );
