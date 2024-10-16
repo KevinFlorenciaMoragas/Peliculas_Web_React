@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function LikeButton(props) {
-    const [state, setState] = useState(null);
-    const [propertyName, setPropertyName] = useState("");
+    const [state, setState] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
+    const propertyName = props.propertyName;
+    let [propertyValue, setPropertyValue] = useState(false);
 
     useEffect(() => {
         const options = {
@@ -22,21 +23,26 @@ export default function LikeButton(props) {
                 if (res.error) {
                     setErrorMessage(`Error fetching data`);
                 } else {
-                    console.log(res)
+                    console.log(res[propertyName]);
                     setState(res);
-                    setPropertyName(res.propertyName); 
+                    setPropertyValue(res[propertyName]); // Accede directamente a res[propertyName]
                 }
             })
             .catch((err) => {
                 setErrorMessage('Error fetching data');
                 console.error(err);
             });
-    }, [props.userId, props.movieId]); 
+    }, [propertyValue]); // Agrega las props relevantes como dependencias
 
     const clickButton = () => {
-        const newPropertyValue = propertyName === "false" ? true : false; 
-        console.log(newPropertyValue);
-        console.log(props.propertyName)
+        console.log(propertyValue);
+        let newPropertyValue 
+        if(propertyValue === false){
+            newPropertyValue = true;
+        }else{
+            newPropertyValue = false;
+        }
+        console.log(propertyName); 
         const options = {
             method: 'POST',
             credentials: 'include',
@@ -46,7 +52,7 @@ export default function LikeButton(props) {
             body: JSON.stringify({ 
                 userId: props.userId,
                 movieId: props.movieId,
-                propertyName: newPropertyValue 
+                [propertyName]: newPropertyValue 
             })
         };
 
@@ -56,8 +62,7 @@ export default function LikeButton(props) {
                 if (res.error) {
                     setErrorMessage(`Error updating data`);
                 } else {
-                    setState(res);
-                    setPropertyName(res.propertyName);
+                    setPropertyValue(propertyValue); // Actualiza propertyValue tras la respuesta exitosa
                 }
             })
             .catch((err) => {
@@ -70,7 +75,7 @@ export default function LikeButton(props) {
         <div>
             {errorMessage && <p className="error">{errorMessage}</p>}
             <button onClick={clickButton}>
-                {propertyName ? "Unlike" : "Like"}
+                {propertyValue ? "Unlike" : "Like"} {/* Cambié aquí para usar propertyValue */}
             </button>
         </div>
     );
