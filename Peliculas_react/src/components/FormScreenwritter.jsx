@@ -35,70 +35,73 @@ export default function FormScreenwritter() {
         if (res.error) {
           setErrorMessage("Error creating screenwritter");
         } else {
-            setErrorMessage("Screenwritter created successfully");
+          setErrorMessage("Screenwritter created successfully");
           console.log(res);
         }
       })
-      .catch((err) => { setErrorMessage('Error creating screenwritter')
-        console.log(err);   
-       });
-    }
-  
+      .catch((err) => {
+        setErrorMessage('Error creating screenwritter')
+        console.log(err);
+      });
+  }
+
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <InputLabel
-          labelFor="name"
-          label="Screenwritter Name"
-          inputType="text"
-          inputId="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <InputLabel
-          labelFor="lastName"
-          label="Last Name"
-          inputType="text"
-          inputId="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <InputLabel
-          labelFor="photo"
-          label="Photo URL"
-          inputType="text"
-          inputId="photo"
-          value={photo}
-          onChange={(e) => setPhoto(e.target.value)}
-        />
-        <InputLabel
-          labelFor="biography"
-          label="Biography"
-          inputType="textarea"
-          inputId="biography"
-          value={biography}
-          onChange={(e) => setBiography(e.target.value)}
-        />
-        <InputLabel
-          labelFor="birthPlace"
-          label="Birth Place"
-          inputType="text"
-          inputId="birthPlace"
-          value={birthPlace}
-          onChange={(e) => setBirthPlace(e.target.value)}
-        />
-        <InputLabel
-          labelFor="birthDate"
-          label="Birth Date"
-          inputType="date"
-          inputId="birthDate"
-          value={birthDate}
-          onChange={(e) => setBirthDate(e.target.value)}
-        />
-        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
+      <section className='d-flex justify-content-center align-items-center my-1'>
+        <form onSubmit={handleSubmit} className='col-12 col-md-6 col-lg-4'>
+          <InputLabel
+            labelFor="name"
+            label="Screenwritter Name"
+            inputType="text"
+            inputId="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <InputLabel
+            labelFor="lastName"
+            label="Last Name"
+            inputType="text"
+            inputId="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          <InputLabel
+            labelFor="photo"
+            label="Photo URL"
+            inputType="text"
+            inputId="photo"
+            value={photo}
+            onChange={(e) => setPhoto(e.target.value)}
+          />
+          <InputLabel
+            labelFor="biography"
+            label="Biography"
+            inputType="textarea"
+            inputId="biography"
+            value={biography}
+            onChange={(e) => setBiography(e.target.value)}
+          />
+          <InputLabel
+            labelFor="birthPlace"
+            label="Birth Place"
+            inputType="text"
+            inputId="birthPlace"
+            value={birthPlace}
+            onChange={(e) => setBirthPlace(e.target.value)}
+          />
+          <InputLabel
+            labelFor="birthDate"
+            label="Birth Date"
+            inputType="date"
+            inputId="birthDate"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+          />
+          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
+      </section>
     </>
   );
 }

@@ -45,7 +45,8 @@ export default function FormActor() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+    <section className='d-flex justify-content-center align-items-center my-1'>
+      <form onSubmit={handleSubmit} className='col-12 col-md-6 col-lg-4'>
         <InputLabel
           labelFor="name"
           label="Actor Name"
@@ -97,6 +98,7 @@ export default function FormActor() {
         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
+      </section>
     </>
   );
 }

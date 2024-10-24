@@ -12,11 +12,14 @@ import movieFullButton from '../assets/svg/movie-full.svg';
 import movieNoFullButton from '../assets/svg/movie-nofull.svg';
 import { useAuth } from '../context/AuthContext';
 import YoutubeVideos from '../components/YoutubeVideos';
+import GenreSpan from '../components/GenreSpan';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MovieDetail() {
   const [movie, setMovie] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [comments, setComments] = useState({});
+  const [inputComment, setInputComment] = useState("");
   const { id } = useParams();
   const { userId } = useAuth();
 
@@ -42,85 +45,153 @@ export default function MovieDetail() {
       .catch(() => {
         setErrorMessage('Fallo al cargar la película');
       });
+      
+    fetch(`${API_URL}comment/${id}`, options)
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          setErrorMessage("Datos no correctos");
+        } else {
+          setComments(res);
+          console.log(res);
+        }
+      });
   }, [id]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const comment = {
+      comment: inputComment,
+      movieId: id,
+      userId: userId
+    };
+    console.log(comment);
+    const options = {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(comment)
+    };
+    fetch(`${API_URL}comment`, options)
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          setErrorMessage("Datos no correctos");
+        } else {
+          setComments([...comments, res]);
+          console.log(comments)
+          setInputComment("");
+        }
+      })
+    }
+  const spanTitle ={
+    color: '#CECECE',
+    fontWeight:'bold',
+  }
+  const spanText ={
+    color: '#E8E9F3',
+  }
 
   const imgStyle = {
-    width: '100%',
+    width: '30%',
     height: 'auto'
   };
-
-  if (movie == null) {
+  const commentStyle = {
+    backgroundColor: '#1C1C1C',
+    color: '#E8E9F3',
+    padding: '10px',
+    borderRadius: '10px',
+    margin: '10px 0'
+  };
+  if (movie == null || comments == null) {
     return <h1>Cargando...</h1>;
   }
 
   return (
     <Tabs>
       <Tab eventKey="Info Pelicula" title="Película">
-        <section className='row d-flex justify-content-center'>
-          <h2 className='pt-2'>{movie.movieName}</h2>
-          <span className='pt-2'>Año {movie.releaseDate} | Duración {movie.duration} min</span>
-          <img className='img-fluid d-lg-block' src={movie.banner} alt={`${movie.movieName} banner`} />
-          <article className='col-12 col-md-5 col-lg-12 p-3 d-flex'>
-            <img className='img-fluid' src={movie.poster} style={imgStyle} alt={`${movie.movieName} poster`} />
-            <div className='p-2 flex-column'>
-              <div className='d-flex'>
-                {movie.genres && movie.genres.map((genre, index) => (
-                  <span key={index} className='badge bg-primary m-1'>{genre.name}</span>
-                ))}
+        <section className='container'>
+          <h2 className='py-2 text-center'>{movie.movieName}</h2>
+          <span className='py-1 text-center d-block'>Año {movie.releaseDate} | Duración {movie.duration} min</span>
+          <img className='img-fluid' src={movie.banner} alt={`${movie.movieName} banner`} style={{ width: '100%', height: 'auto' }} />          <article className='row p-3'>
+            <div className='col-md-4 d-none d-md-block'>
+              <img className='img-fluid' src={movie.poster} style={imgStyle} alt={`${movie.movieName} poster`} />
+            </div>
+            <div className='col-md-8'>
+              <div className='d-flex flex-column align-items-start'>
+                <div className='d-flex flex-wrap'>
+                  {movie.genres && movie.genres.map((genre, index) => (
+                    <GenreSpan key={index} genre={genre.name} className={"badge bg-primary my-1 me-1"} />
+                  ))}
+                </div>
+                <p className='py-2'>{movie.synopsis}</p>
+                <div className='d-flex flex-row justify-content-start py-2'>
+                  <LikeButton userId={userId} movieId={movie.id} propertyName={"like"} fullButton={fullLikeButton} noFullButton={noFullLikeButton} />
+                  <LikeButton userId={userId} movieId={movie.id} propertyName={"watched"} fullButton={movieFullButton} noFullButton={movieNoFullButton} />
+                  <LikeButton userId={userId} movieId={movie.id} propertyName={"toSee"} fullButton={listCheckButton} noFullButton={noListCheckButton} />
+                </div>
               </div>
-              <p>{movie.synopsis}</p>
-              <section className='col-12 col-md-5 col-lg-4 d-flex flex-row'>
-                <LikeButton userId={userId} movieId={movie.id} propertyName={"like"} fullButton={fullLikeButton} noFullButton={noFullLikeButton} />
-                <LikeButton userId={userId} movieId={movie.id} propertyName={"watched"} fullButton={movieFullButton} noFullButton={movieNoFullButton} />
-                <LikeButton userId={userId} movieId={movie.id} propertyName={"toSee"} fullButton={listCheckButton} noFullButton={noListCheckButton} />
-              </section>
             </div>
           </article>
-          <section className='col-12 col-md-5 col-lg-4 p-3'>
-            <h3>Director</h3>
-            {movie.directors && movie.directors.length > 0 ? (
-              movie.directors.map((director, index) => (
-                <span key={index}> {director.name} {director.lastName} </span>
-              ))
-            ) : (
-              <span>Sin directores disponibles</span>
-            )}
-            <h3>Actores</h3>
-            <div>
-              {movie.actors && movie.actors.length > 0 ? (
-                movie.actors.map((actor, index) => (
-                  <span key={index}> {actor.name} {actor.lastName} </span>
-                ))
-              ) : (
-                <span>Sin actores disponibles</span>
-              )}
+          <section className='row my-3'>
+            <div className='col-md-4'>
+              <h4>Director</h4>
+              <p>{movie.directors && movie.directors.length > 0 ? movie.directors.map((director, index) => (
+                <span key={index}>{director.name} {director.lastName}{index < movie.directors.length - 1 ? ', ' : ''}</span>
+              )) : "Sin directores disponibles"}</p>
             </div>
-            <h3>Escritores</h3>
-            <div>
-              {movie.screenwritters && movie.screenwritters.length > 0 ? (
-                movie.screenwritters.map((screenwriter, index) => (
-                  <span key={index}> {screenwriter.name} {screenwriter.lastName} </span>
-                ))
-              ) : (
-                <span>Sin escritores disponibles</span>
-              )}
+            <div className='col-md-4'>
+              <h4>Reparto</h4>
+              <p>{movie.actors && movie.actors.length > 0 ? movie.actors.map((actor, index) => (
+                <span key={index}>{actor.name} {actor.lastName}{index < movie.actors.length - 1 ? ', ' : ''}</span>
+              )) : "Sin reparto disponibles"}</p>
+            </div>
+            <div className='col-md-4'>
+              <h4>Escritores</h4>
+              <p>{movie.screenwritters && movie.screenwritters.length > 0 ? movie.screenwritters.map((screenwriter, index) => (
+                <span key={index}>{screenwriter.name} {screenwriter.lastName}{index < movie.screenwritters.length - 1 ? ', ' : ''}</span>
+              )) : "Sin escritores disponibles"}</p>
             </div>
           </section>
-          <section className='col-12 col-md-5 col-lg-4'>
+          <section className='my-3'>
             <h3>Trailer</h3>
-             <YoutubeVideos trailer={movie.trailer}></YoutubeVideos> 
+            <YoutubeVideos trailer={movie.trailer} />
           </section>
-          <section className=''>
-            {
-              movie.genres && movie.genres.map((genre) => (
-                <CardRelationMovie key={genre.id} genreId={genre.id} movieId={id} />
-              ))
-            }
+          <section className='my-2'>
+            <h3>Películas Relacionadas</h3>
+            {movie.genres && movie.genres.map((genre) => (
+              <CardRelationMovie key={genre.id} genreId={genre.id} movieId={id} />
+            ))}
           </section>
         </section>
       </Tab>
       <Tab eventKey="Comments" title="Comentario">
-
+        <section className='d-flex flex-column justify-content-center align-items-center'>
+          <article className='col-12 col-md-6 col-lg-6'>
+          {comments && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div className='my-2 ' style={commentStyle} key={comment.id}>
+                <h4>{comment.user.username}</h4>
+                <p>{comment.comment}</p>
+              </div>
+            ))
+          ) : (
+            <span>Sin comentarios</span>
+          )}
+          </article>
+        </section>
+        <section className='row d-flex justify-content-center'>
+          <div className='col-12 col-md-6 col-lg-6'>
+            <form onSubmit={handleSubmit}>
+              <div className='my-3'>
+                <label htmlFor='comment' className='form-label' style={spanTitle}>Comentario</label>
+                <textarea className='form-control' id='comment' rows='3' onChange={(e) => setInputComment(e.target.value)}></textarea>
+              </div>
+              <button type='submit' className='btn btn-secondary'>Enviar</button>
+            </form>
+          </div>
+        </section>
       </Tab>
     </Tabs>
   );

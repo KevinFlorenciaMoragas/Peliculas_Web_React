@@ -8,10 +8,14 @@ export default function Header() {
     event.preventDefault(); 
 
   };
-
+  console.log(role)
+  const headerStyle = {
+    backgroundColor: '#545365',
+    color: 'white',
+  }
   return (
     <>
-      <nav className='navbar navbar-expand-lg bg-body-tertiary'>
+      <nav className='navbar navbar-expand-lg header' >
         <Link to='/' className='navbar-brand'>Peliculas</Link>
         <button 
           className="navbar-toggler" 
@@ -29,7 +33,7 @@ export default function Header() {
               <Link to='/' className='nav-link'>Inicio</Link>
             </li>
             <li className='nav-item'>
-              <Link to='/about' className='nav-link'>Sobre</Link>
+              <Link to='/list' className='nav-link'>Lista Peliculas</Link>
             </li>
             <li className="nav-item dropdown">
               <Link 

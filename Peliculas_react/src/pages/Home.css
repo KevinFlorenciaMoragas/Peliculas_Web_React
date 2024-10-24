@@ -1,0 +1,13 @@
+.actor{
+    color:rgb(195, 195, 196)   
+}
+.actor:hover {
+    color: rgb(86, 86, 240);
+    cursor: pointer;
+    text-decoration: underline;
+}
+.main{
+    border: 2px black solid;
+    border-radius: 2em;
+    background-color: #3B3B40;
+}

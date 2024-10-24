@@ -31,10 +31,10 @@ export default function DropdownSelect({ endpoint, index, onChange, name }) {
 
     return (
         <>
-            <select className='form-select' value={selected} onChange={handleSelectChange}>
+            <select className='form-select my-2' value={selected} onChange={handleSelectChange}>
                 <option value="">Select an {name}</option>
                 {dropdownGet.map((item) => (
-                    <option key={item.id} value={item.id}>{item.name}</option>
+                    <option key={item.id} value={item.id}>{item.name} {item.lastName}</option>
                 ))}
             </select>
             {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}

@@ -37,7 +37,8 @@ export default function FormGenre() {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <section className='d-flex justify-content-center align-items-center my-1'>
+            <form onSubmit={handleSubmit} className='col-12 col-md-6 col-lg-4'>
                 <InputLabel
                     labelFor="genre"
                     label="Genre Name"
@@ -50,6 +51,7 @@ export default function FormGenre() {
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
+            </section>
         </>
     );
 }

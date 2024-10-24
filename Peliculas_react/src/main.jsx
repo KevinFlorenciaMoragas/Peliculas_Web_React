@@ -11,21 +11,24 @@ import AdminPanel from './pages/AdminPanel.jsx'
 import Header from './components/Header.jsx'
 import MovieDetail from './pages/MovieDetail.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
+import ListMovie from './pages/ListMovie.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <Header></Header>
+        <div className='container-fluid'>
         <Routes>
           <Route path='/' element={<App></App>}>
             <Route index element={<Home></Home>}></Route>
             <Route path='/login' element={<Login></Login>}></Route>
             <Route path='/register' element={<Register></Register>}></Route>
             <Route path='/admin' element={<AdminPanel></AdminPanel>}></Route>
+            <Route path='/list' element={<ListMovie></ListMovie>}></Route>
             <Route path='/movie/:id' element={<MovieDetail></MovieDetail>}> </Route>
-            
           </Route>
         </Routes>
+        </div>
       </AuthProvider>
     </BrowserRouter>
     <App />
