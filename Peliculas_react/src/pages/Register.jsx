@@ -1,8 +1,6 @@
-import React from 'react'
 import InputLabel from '../components/InputLabel'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Register() {
@@ -38,7 +36,7 @@ export default function Register() {
                      navigate('/login')
                 }
             })
-            .catch((err) => { setErrorMessage('Fallo al iniciar sesión') })
+            .catch((err) => { setErrorMessage('Fallo al registrar') })
     }
   return (
     <>

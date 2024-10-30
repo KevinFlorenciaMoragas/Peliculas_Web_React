@@ -37,6 +37,13 @@ export default function FormActor() {
         } else {
           setErrorMessage("Actor created successfully");
           console.log(res);
+          setName("")
+          setBiography("")
+          setBirthPlace("")
+          setBirthDate(date.toISOString().split("T")[0])
+          setPhoto("")
+          setLastName("")
+          
         }
       })
       .catch((err) => { setErrorMessage('Error creating actor') });

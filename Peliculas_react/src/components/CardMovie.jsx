@@ -1,10 +1,11 @@
 import React from 'react'
 import GenreSpan from './GenreSpan'
-
+import Image from './Image'
 export default function CardMovie(props) {
     const imgStyle = {
         width: '10%',
-        height: 'auto'
+        height: 'auto',
+        objectFit: "cover"
     }
     const aStyle = {
         textDecoration: 'none',
@@ -14,7 +15,7 @@ export default function CardMovie(props) {
     return (
         <>
             <div className='col-12 col-md-12 d-flex align-items-start'>
-                <img src={props.poster} style={imgStyle} className='img-fluid'></img>
+                <Image src={props.poster} alt={props.movieName} imgStyle={imgStyle} className="img-fluid"></Image>
                 <div className='d-flex flex-column justify-content-start px-2'>
                     <h3>{props.movieName}</h3>
                     <div className='d-flex flex-row'>

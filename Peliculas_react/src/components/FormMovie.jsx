@@ -74,7 +74,6 @@ export default function FormMovie() {
         fetch(`${API_URL}/movie`, options)
             .then((res) => {
                 if (!res.ok) {
-                    // Manejar el código de estado 400 (Bad Request)
                     if (res.status === 400) {
                         return res.json().then(errorData => {
                             throw new Error(errorData.message || "Error creating movie");
@@ -89,7 +88,7 @@ export default function FormMovie() {
                 console.log(res);
             })
             .catch((err) => {
-                setErrorMessage(err.message); // Muestra el mensaje de error recibido
+                setErrorMessage(err.message);
                 console.log(err);
             });
     };
@@ -194,7 +193,7 @@ export default function FormMovie() {
                     <input
                         type="number"
                         min="1"
-                        className='form-control my-2'
+                        className='form-control'
                         value={dropdownScreenwritterNumber}
                         onChange={(e) => setDropdownScreenwritterNumber(e.target.value)}
                     />

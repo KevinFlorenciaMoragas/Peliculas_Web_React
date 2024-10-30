@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import GenreSpan from './GenreSpan';
+import Image from './Image';
 import infoSvg from '../assets/svg/info.svg';
 import { Badge, ListGroup } from 'react-bootstrap';
 const API_URL = import.meta.env.VITE_API_URL;
@@ -18,9 +19,10 @@ export default function ListMovieComponent(props) {
         width: "1.5em",
         height: "1.5em",
     }
+
     return (
         <ListGroup.Item style={movieCard} as="li" className="d-flex justify-content-between align-items-start">
-            <img src={props.poster} className="img-fluid" style={imgCard}></img>
+            <Image src={props.poster} alt={props.movieName} imgStyle={imgCard}></Image>
             <div className="ms-2 me-auto">
                 <div className="fw-bold my-1">{props.movieName}</div>
                 {

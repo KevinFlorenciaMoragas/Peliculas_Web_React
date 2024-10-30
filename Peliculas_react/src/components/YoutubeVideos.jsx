@@ -1,15 +1,10 @@
 import React from 'react'
 
 export default function YoutubeVideos(props) {
-    const getVideoId = (url) => {
-        const regex = /[?&]v=([^&#]*)/;
-        const matches = url.match(regex);
-        return matches ? matches[1] : null;
-    };
     return (
         <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
             <iframe
-                src={`https://www.youtube.com/embed/${getVideoId(props.trailer)}`}
+                src={props.trailer}
                 style={{
                     position: 'absolute',
                     top: 0,
