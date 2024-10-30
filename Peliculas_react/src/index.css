@@ -2,3 +2,6 @@ body{
     background-color: #272635;
     color: #E8E9F3;
 }
+.container-fluid {
+    min-height: 100vh;
+}

@@ -5,8 +5,10 @@ import ListMovieComponent from '../components/ListMovieComponent';
 const API_URL = import.meta.env.VITE_API_URL;
 export default function ListMovie() {
     const [movies, setMovies] = useState([]);
+    const [order, setOrder] = useState("movieName")
     const [genreSelected, setGenreSelected] = useState(null);
     const [genres, setGenres] = useState([]);
+
     useEffect(() => {
         const options = {
             method: 'GET',
@@ -23,7 +25,7 @@ export default function ListMovie() {
                 })
                 .catch(error => console.log(error))
 
-            fetch(`${API_URL}/movie`, options)
+            fetch(`${API_URL}/movie/order/${order}`, options)
                 .then(res => res.json())
                 .then(res => {
                     setMovies(res)
@@ -38,13 +40,18 @@ export default function ListMovie() {
                 })
                 .catch(error => console.log(error))
         }
-    }, [genreSelected])
+    }, [genreSelected, order])
 
     return (
         <>
 
             <section className='row d-flex justify-content-center my-2'>
-                <div className='col-12 col-md-6 col-lg-2 d-flex flex-column  '>
+                <div className='col-12 col-md-6 col-lg-2 d-flex flex-column'>
+                    <select className="form-select my-2" value={"movieName"} onChange={(e) => { setOrder(e.target.value) }} aria-label="">
+                        <option selected value="movieName">Titulo</option>
+                        <option value="score">Puntuación</option>
+                        <option value="duration">Duration</option>
+                    </select>
                     {
                         genres.map((genre, index) => {
                             return (
@@ -58,6 +65,7 @@ export default function ListMovie() {
 
                     }
                     <button className='btn btn-secondary my-2' onClick={() => { setGenreSelected(null) }} >Borrar</button>
+
                 </div>
 
                 <div className='col-12 col-md-6 col-lg-4'>

@@ -16,9 +16,12 @@ import GenreSpan from '../components/GenreSpan';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MovieDetail() {
+
+  const {user, logout, role} = useAuth()
+
   const [movie, setMovie] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [comments, setComments] = useState({});
+  const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState("");
   const { id } = useParams();
   const { userId } = useAuth();
@@ -45,7 +48,17 @@ export default function MovieDetail() {
       .catch(() => {
         setErrorMessage('Fallo al cargar la película');
       });
-      
+      getComments();
+    
+  }, [id]);
+  const getComments = () => {
+    const options = {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
     fetch(`${API_URL}comment/${id}`, options)
       .then(res => res.json())
       .then(res => {
@@ -56,7 +69,7 @@ export default function MovieDetail() {
           console.log(res);
         }
       });
-  }, [id]);
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     const comment = {
@@ -64,7 +77,7 @@ export default function MovieDetail() {
       movieId: id,
       userId: userId
     };
-    console.log(comment);
+    
     const options = {
       method: 'POST',
       credentials: 'include',
@@ -73,18 +86,22 @@ export default function MovieDetail() {
       },
       body: JSON.stringify(comment)
     };
+    
     fetch(`${API_URL}comment`, options)
       .then(res => res.json())
       .then(res => {
         if (res.error) {
           setErrorMessage("Datos no correctos");
         } else {
-          setComments([...comments, res]);
-          console.log(comments)
+          setComments((prevComments) => [...prevComments, res]);
           setInputComment("");
+          getComments();
         }
       })
-    }
+      .catch(() => {
+        setErrorMessage("Fallo al enviar el comentario");
+      });
+  }
   const spanTitle ={
     color: '#CECECE',
     fontWeight:'bold',
@@ -104,6 +121,16 @@ export default function MovieDetail() {
     borderRadius: '10px',
     margin: '10px 0'
   };
+  const alertStyle = {
+    backgroundColor: '#1C1C1C',
+    color: '#E8E9F3',
+    fontSize: '2em',
+    padding: '10px',
+    borderRadius: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop:'3em'
+  }
   if (movie == null || comments == null) {
     return <h1>Cargando...</h1>;
   }
@@ -172,7 +199,7 @@ export default function MovieDetail() {
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div className='my-2 ' style={commentStyle} key={comment.id}>
-                <h4>{comment.user.username}</h4>
+                {comment.user && comment.user.username ? <h4>{comment.user.username}</h4> : <h4>Usuario eliminado</h4>}
                 <p>{comment.comment}</p>
               </div>
             ))
@@ -183,13 +210,17 @@ export default function MovieDetail() {
         </section>
         <section className='row d-flex justify-content-center'>
           <div className='col-12 col-md-6 col-lg-6'>
-            <form onSubmit={handleSubmit}>
+            {
+              user ? (<form onSubmit={handleSubmit}>
               <div className='my-3'>
                 <label htmlFor='comment' className='form-label' style={spanTitle}>Comentario</label>
                 <textarea className='form-control' id='comment' rows='3' onChange={(e) => setInputComment(e.target.value)}></textarea>
               </div>
               <button type='submit' className='btn btn-secondary'>Enviar</button>
-            </form>
+            </form> )
+            : (<span style={alertStyle}>Inicia sesión para poder comentar</span>)
+            }
+            
           </div>
         </section>
       </Tab>

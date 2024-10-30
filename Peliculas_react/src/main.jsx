@@ -8,8 +8,11 @@ import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import AdminPanel from './pages/AdminPanel.jsx'
+import RecoverPassword from './pages/RecoverPassword.jsx'
 import Header from './components/Header.jsx'
+import Footer from './components/Footer.jsx'
 import MovieDetail from './pages/MovieDetail.jsx'
+import RecoverPassoword from './pages/RecoverPassword.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import ListMovie from './pages/ListMovie.jsx'
 createRoot(document.getElementById('root')).render(
@@ -26,9 +29,11 @@ createRoot(document.getElementById('root')).render(
             <Route path='/admin' element={<AdminPanel></AdminPanel>}></Route>
             <Route path='/list' element={<ListMovie></ListMovie>}></Route>
             <Route path='/movie/:id' element={<MovieDetail></MovieDetail>}> </Route>
+            <Route path='/recover-password' element={<RecoverPassword></RecoverPassword>}></Route>
           </Route>
         </Routes>
         </div>
+        <Footer></Footer>
       </AuthProvider>
     </BrowserRouter>
     <App />

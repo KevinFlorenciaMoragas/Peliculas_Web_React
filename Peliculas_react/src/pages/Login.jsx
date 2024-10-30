@@ -3,7 +3,7 @@ import InputLabel from '../components/InputLabel'
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Cookie from 'js-cookie'
-
+import { Link } from 'react-router-dom';
 const API_URL = import.meta.env.VITE_API_URL;
 export default function Login() {
     const {login} = useAuth()
@@ -36,7 +36,7 @@ export default function Login() {
                     Cookie.set('token', res, { expires: 180000 })
                     console.log(username)
                     login(res)
-                    //navigate('/')
+                    navigate('/')
                 }
             })
             .catch((err) => { setErrorMessage('Fallo al iniciar sesión') })
@@ -63,7 +63,9 @@ export default function Login() {
                     />
                     {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                     <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
+                    <Link to="/recover-password"><span>¿Olvidaste la contraseña?</span></Link>
                 </form>
+                
             </section>
         </>
     )
