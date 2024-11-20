@@ -3,17 +3,14 @@ import github from '../assets/svg/github.svg'
 import linkedin from '../assets/svg/linkedin.svg'
 export default function Footer() {
     const date = new Date().getFullYear()
-    const footerStyle = {
-        backgroundColor: "#545365",
-        color: "#E8E9F3"
-    }
+    
     const svgStyle = {
         height: "2em",
         width: "2em",
         marginRight: "1em"
     }
     return (
-        <footer style={footerStyle} className='my-2 d-flex flex-row justify-content-between' >
+        <footer className='mt-2 d-flex flex-row justify-content-between' >
             <div className='p-2'>
                 <h4>@ PelisCorp {date} </h4>
             </div>

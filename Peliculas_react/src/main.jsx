@@ -15,12 +15,15 @@ import MovieDetail from './pages/MovieDetail.jsx'
 import RecoverPassoword from './pages/RecoverPassword.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import ListMovie from './pages/ListMovie.jsx'
+import { ThemeProvider } from './context/ThemeContext.jsx'
+import LoadingPage from './pages/LoadingPage.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
+      <ThemeProvider>
         <Header></Header>
-        <div className='container-fluid'>
+        <div className='container-fluid main-container'>
         <Routes>
           <Route path='/' element={<App></App>}>
             <Route index element={<Home></Home>}></Route>
@@ -34,6 +37,7 @@ createRoot(document.getElementById('root')).render(
         </Routes>
         </div>
         <Footer></Footer>
+        </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
     <App />

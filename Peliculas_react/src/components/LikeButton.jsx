@@ -13,7 +13,6 @@ export default function LikeButton(props) {
         cursor: 'pointer',
         height: '2em',
         width: '2em'
-        
     };
     useEffect(() => {
         const options = {

@@ -4,28 +4,40 @@ import GenreSpan from '../components/GenreSpan';
 import './Home.css';
 import CarouselMovie from '../components/CarouselMovie';
 import PersonCard from '../components/PersonCard';
+import LoadingPage from './LoadingPage';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const [order, setOrder] = useState("movieName");
   const [movies, setMovies] = useState([]);
   const [random, setRandom] = useState(null);
+  let routeWithParams = '';
 
   useEffect(() => {
+    const params = new URLSearchParams({
+      limit: 5,
+      page: 1,
+      order: order,
+    });
     const options = {
       method: 'GET',
       credentials: 'include',
       headers: {
         "Content-Type": "application/json",
       },
+      params: {
+        order: order,
+        limit: 5,
+        page: 1
+      }
     };
-
-    fetch(`${API_URL}movie/order/${order}`, options)
+    console.log(options);
+    fetch(`${API_URL}/movies`, options)
       .then(res => res.json())
       .then(res => {
-        setMovies(res);
-        if (res.length > 0) {
-          setRandom(Math.floor(Math.random() * res.length));
+        setMovies(res.movies);
+        if (res.movies.length > 0) {
+          setRandom(Math.floor(Math.random() * res.movies.length));
         }
       })
       .catch(err => {
@@ -34,7 +46,7 @@ export default function Home() {
   }, [order]);
 
   if (movies.length === 0) {
-    return <h1>Cargando...</h1>;
+    <LoadingPage />;
   }
 
   return (
@@ -48,10 +60,10 @@ export default function Home() {
                   <>
                     <h3>{movies[random].movieName}</h3>
                     <section className='d-flex flex-row'>
-                    <strong className='me-2'>Director: </strong>
-                    {movies[random].directors.map((director, index) => (
-                      <span key={index}> {director.name} {director.lastName} </span>
-                    ))}
+                      <strong className='me-2'>Director: </strong>
+                      {movies[random].directors.map((director, index) => (
+                        <span key={index}> {director.name} {director.lastName} </span>
+                      ))}
                     </section>
                     <p className='py-2'>{movies[random].synopsis}</p>
                     <div className='d-flex flex-wrap'>
@@ -60,11 +72,11 @@ export default function Home() {
                       ))}
                     </div>
                     <section className='d-flex flex-row'>
-                    {movies[random].genres.map((genre, index) => (
-                      
-                        <GenreSpan genre={genre.name} className={" badge bg-primary mx-1"} />
-                      
-                    ))}
+                      {movies[random].genres.map((genre, index) => (
+
+                        <GenreSpan key={genre.id} genre={genre.name} className={" badge bg-primary mx-1"} />
+
+                      ))}
                     </section>
                   </>
                 )}

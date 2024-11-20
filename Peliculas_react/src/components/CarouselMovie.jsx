@@ -17,7 +17,7 @@ export default function CarouselMovie({ movies }) {
                 {
                     movies.map((movie, index) => {
                         return (
-                            <Carousel.Item>
+                            <Carousel.Item key={movie.id}>
                                 <Image src={movie.banner} alt={movie.movieName} imgStyle={imgStyle}></Image>
                                 <Carousel.Caption>
                                     <div style={{backgroundColor: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '10px'}}>

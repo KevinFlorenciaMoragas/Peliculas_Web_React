@@ -7,29 +7,26 @@ export const AuthProvider = ({children}) => {
     const [user,setUser] = useState(null)
     const [role, setRole] = useState(null)
     const [userId, setUserId] = useState(null)
+    const token = Cookies.get('token')
     useEffect(()=> {
-        const token = Cookies.get('token')
-        console.log(token)
         if(token){
             const decoded = jwtDecode(token)
             setUser(decoded.username)
             setRole(decoded.role)
             setUserId(decoded.userId)
-            console.log(role)
         }
     },[])
     const login = (token) => {
-        console.log("Estoy en login")
-        console.log(token)
         const decoded = jwtDecode(token)
-        console.log(decoded)
         setRole(decoded.role)
         setUser(decoded.username)
         setUserId(decoded.userId)
     }
     const logout = () => {
         setUser(null)
-        Cookies.set(null)
+        setRole(null)
+        setUserId(null)
+        Cookies.remove('token')
     }
     return (
         <AuthContext.Provider value={{user,role,userId,login,logout}}>

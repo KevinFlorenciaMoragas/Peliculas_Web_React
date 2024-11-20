@@ -67,7 +67,7 @@ export default function CardRelationMovie({ movieId, genreId }) {
         <div className="p-2" style={cardStyle}>
           <Image src={movie.poster} alt={movie.movieName} imgStyle={imageStyle} />
           <div className="">
-            <div className="d-flex justify-content-between align-items-start">
+            <div className="d-flex justify-content-between align-items-center">
             <h5 style={cardTitleStyle} className="py-1">{movie.movieName}</h5>
             <span className="badge bg-primary">{movie.releaseDate}</span>
             </div>

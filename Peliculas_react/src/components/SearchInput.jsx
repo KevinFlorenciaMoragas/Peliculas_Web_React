@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CardMovie from './CardMovie';
 import { Link } from 'react-router-dom';
-
+import './SearchInput.css'; // Asegúrate de usar el CSS adaptado
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SearchInput() {
     const [search, setSearch] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
 
     // Debounce para limitar las llamadas a la API
@@ -16,9 +17,11 @@ export default function SearchInput() {
         const delayDebounceFn = setTimeout(() => {
             if (search) {
                 fetchMovies(search);
+                setShowDropdown(true);
             } else {
                 setMovieList([]);
                 setErrorMessage('');
+                setShowDropdown(false);
             }
         }, 300); // Esperar 300ms antes de realizar la búsqueda
 
@@ -30,7 +33,7 @@ export default function SearchInput() {
             .then((res) => res.json())
             .then(res => {
                 if (res.error) {
-                    setErrorMessage('Movie not found');
+                    setErrorMessage('Película no encontrada');
                     setMovieList([]);
                 } else {
                     setMovieList(res);
@@ -38,7 +41,7 @@ export default function SearchInput() {
                 }
             })
             .catch((err) => {
-                setErrorMessage('Error fetching movie');
+                setErrorMessage('Error al buscar películas');
                 console.log(err);
             });
     };
@@ -51,27 +54,36 @@ export default function SearchInput() {
         }
     };
 
+    const handleBlur = () => {
+        // Ocultar dropdown cuando el campo pierde foco
+        setTimeout(() => setShowDropdown(false), 200);
+    };
+
     return (
-        <>
-            <form className='d-flex' onSubmit={handleSearchSubmit}>
+        <div className="search-container">
+            <form className="search-form" onSubmit={handleSearchSubmit}>
                 <input
-                    className='form-control me-2'
-                    type='search'
-                    placeholder='Buscar'
-                    aria-label='Buscar'
+                    className="search-input"
+                    type="text"
+                    placeholder="Buscar..."
+                    aria-label="Buscar"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onFocus={() => setShowDropdown(true)}
+                    onBlur={handleBlur}
                 />
-                <button className='btn btn-outline-secondary' type='submit'>Buscar</button>
+                <button className="search-button" type="submit">Buscar</button>
             </form>
-            <section className='mt-2'>
-                {errorMessage && <h2>{errorMessage}</h2>}
-                <ul className='list-group'>
-                    {
-                        movieList.length > 0 ? (
+
+            {/* Dropdown de resultados */}
+            {showDropdown && (
+                <div className="results-dropdown">
+                    {errorMessage && <h2 className="error-message">{errorMessage}</h2>}
+                    <ul className="results-list">
+                        {movieList.length > 0 ? (
                             movieList.map((movie) => (
-                                <li className='list-group-item' key={movie.id}>
-                                    <Link to={`/movieDetails/${movie.id}`}>
+                                <li className="result-item" key={movie.id}>
+                                    <Link to={`/movie/${movie.id}`}>
                                         <CardMovie
                                             genres={movie.genres}
                                             movieName={movie.movieName}
@@ -83,11 +95,11 @@ export default function SearchInput() {
                                 </li>
                             ))
                         ) : (
-                            search && <li className='list-group-item'>No se encontraron resultados.</li>
-                        )
-                    }
-                </ul>
-            </section>
-        </>
+                            search && <li className="result-item">No se encontraron resultados.</li>
+                        )}
+                    </ul>
+                </div>
+            )}
+        </div>
     );
 }
